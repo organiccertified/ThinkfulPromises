@@ -15,7 +15,7 @@ function getFortune(question) {
     `Your fortune is: ${response}`
   ])
   .catch((error) => {
-    console.log("There was an error:", error);
+    return error;
   });
   
     
@@ -23,24 +23,30 @@ function getFortune(question) {
 
 function fullSession(question) {
 
-  const welcomeMsg =   welcome()
-  .then(function(result){
-    console.log(result)})
+  return welcome()
+    .then((welcomeMessage) =>
+      tell(question)
+        .then((response) => 
+          goodbye()
+            .then((goodbyeMessage) => [ 
+            `${welcomeMessage}`,
+            `Your question was: ${question}`,
+            `Your fortune is: ${response}`,
+            `${goodbyeMessage}`
+            ])))
 
-  return tell(question)
-    .then((response)=> [
-      
 
-    welcome().then(),
-    `Your question was: ${question}`,
-    `Your fortune is: ${response}`,
-    goodbye().then()
- 
-  ])
-  .catch((error)=>{
-    console.log("There was an error:", error);
-  })
-  }
+    .catch((error)=> 
+            welcome()
+              .then((welcomeMsg) => 
+                goodbye()
+                .then((goodbyeMsg) =>[
+                  `${welcomeMsg}`,
+                  `${error}`,
+                  `${goodbyeMsg}`
+                ])
+              )
+          )}
 
 
  
@@ -50,10 +56,9 @@ function fullSession(question) {
 
 module.exports = { getFortune, fullSession };
 
-let result = fullSession("this is a question?")
+let result = fullSession()
 console.log(result)
 
 result.then(function(result1){
   console.log(result1)
 })
-
